@@ -1,18 +1,83 @@
+# build: ./dir
+# Note: This option is ignored when deploying a stack in swarm mode with a (version 3) Compose file.
+# The docker stack command accepts only pre-built images.
+
 # compose version 3 is required for docker swarm
 version: '3'
 
 # services
 services:
 
-  site:
-    image: site
+  proxy_server:
+    image: proxy_server_image
     ports:
-      - "5001:8080"
+      - "8080:80"
     deploy:
+      replicas: 1
+
+  site:
+    image: site_image
+    ports:
+      - "5002:5000"
+    deploy:
+      # Specify placement of constraints and preference
+      # https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-constraints-constraint
+      # https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-placement-preferences-placement-pref
+      #
+      # placement:
+      #   constraint:
+      #     - node.role == manager
+      #     - engine.labels.operatingsystem == ubuntu 14.04
+      #   preference:
+      #     - spread: node.labels.zone
+      # ==============================
+      # Configures resource constraints
+      # https://docs.docker.com/compose/compose-file/#resources
+      #
+      # resources:
+      #   limits:
+      #     cpus: '0.50'
+      #     memory: 50M
+      #   reservation:
+      #     cpus: '0.25'
+      #     memory: 20M
+      # ==============================
+      # Configures if and how to restart containers when they exit.
+      # https://docs.docker.com/compose/compose-file/#restart_policy
+      #
+      # restart_policy:
+      #   condition: on-failure
+      #   delay: 5s
+      #   max_attempts: 3
+      #   window: 120s
+      # ==============================
+      # If the service is replicated (which is the default), specify the number of containers that should be running at any given time.
+      #
+      mode: replicated
       replicas: 2
+      # ==============================
+      # Configures how the service should be updated. Useful for configuring rolling updates.
+      # https://docs.docker.com/compose/compose-file/#update_config
+      #
+      # update_config:
+      #   parallelism: 2
+      #   delay: 10s
+      #   order: stop-first
+      # ==============================
+      # xpress dependency between services, Service dependencies cause the following behaviors
+      # https://docs.docker.com/compose/compose-file/#depends_on
+      #
+      # depends_on:
+      #   - db
+      #   - redis
+      # =============================
+      # More information on
+      # https://docs.docker.com/compose/compose-file/
 
   visualizer:
     image: dockersamples/visualizer:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "8080:8080"
+      - "5001:8080"
     stop_grace_period: 1m30s
