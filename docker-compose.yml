@@ -12,14 +12,12 @@ services:
     image: proxy_server_image
     ports:
       - "8080:80"
-    deploy:
-      replicas: 1
 
-  site:
-    image: site_image
-    ports:
-      - "5002:5000"
-    deploy:
+  # site:
+  #   image: site_image
+  #   ports:
+  #     - "5002:5000"
+  #   deploy:
       # Specify placement of constraints and preference
       # https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-constraints-constraint
       # https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-placement-preferences-placement-pref
@@ -53,8 +51,8 @@ services:
       # ==============================
       # If the service is replicated (which is the default), specify the number of containers that should be running at any given time.
       #
-      mode: replicated
-      replicas: 2
+      # mode: replicated
+      # replicas: 2
       # ==============================
       # Configures how the service should be updated. Useful for configuring rolling updates.
       # https://docs.docker.com/compose/compose-file/#update_config
@@ -74,10 +72,10 @@ services:
       # More information on
       # https://docs.docker.com/compose/compose-file/
 
-  visualizer:
-    image: dockersamples/visualizer:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - "5001:8080"
-    stop_grace_period: 1m30s
+  # visualizer:
+  #   image: dockersamples/visualizer:latest
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   ports:
+  #     - "5001:8080"
+  #   stop_grace_period: 1m30s
