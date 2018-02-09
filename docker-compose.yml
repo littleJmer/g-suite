@@ -21,10 +21,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     stop_grace_period: 1m30s
 
-  site:
-    image: site_image
-    ports:
-      - 5002:5000
+  # site:
+  #   image: site_image
+  #   ports:
+  #     - 5002:5000
 
   # name_of_service:
   #   image: image
