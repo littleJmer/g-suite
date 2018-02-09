@@ -10,6 +10,8 @@ services:
 
   proxy_server:
     image: proxy_server_image
+    depends_on:
+      - visualizer
     ports:
       - 8080:80
 
