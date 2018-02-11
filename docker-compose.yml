@@ -14,6 +14,22 @@ services:
       - visualizer
     ports:
       - 8080:80
+      - 443:443
+    deploy:
+      replicas: 5
+      update_config:
+        parallelism: 2
+        delay: 5s
+
+  app:
+    image: gglobal/app:latest
+    ports:
+      - 3000:80
+    deploy:
+      replicas: 5
+      update_config:
+        parallelism: 2
+        delay: 5s
 
   visualizer:
     image: dockersamples/visualizer:latest
