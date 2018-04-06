@@ -8,36 +8,50 @@ version: '3'
 # services
 services:
 
-  proxy_server:
-    image: proxy_server_image
-    depends_on:
-      - visualizer
-    ports:
-      - 8080:80
-      - 443:443
-    deploy:
-      replicas: 5
-      update_config:
-        parallelism: 2
-        delay: 5s
+  # proxy_server:
+  #   image: proxy_server_image
+  #   depends_on:
+  #     - visualizer
+  #   ports:
+  #     - 8080:80
+  #     - 443:443
+  #   deploy:
+  #     replicas: 5
+  #     update_config:
+  #       parallelism: 2
+  #       delay: 5s
 
-  app:
-    image: gglobal/app:latest
-    ports:
-      - 3000:80
-    deploy:
-      replicas: 5
-      update_config:
-        parallelism: 2
-        delay: 5s
-
-  visualizer:
-    image: dockersamples/visualizer:latest
-    ports:
-      - 5001:8080
+  mysql_server:
+    image: mysql/mysql-server:5.5
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    stop_grace_period: 1m30s
+      - ./data/mysql/conf/my.cnf:/etc/my.cnf
+      - ./data/mysql/databases:/var/lib/mysql
+      - ./data/mysql/log:/var/log
+    ports:
+      - 3307:3306
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+
+  # app:
+  #   image: gglobal/app:latest
+  #   ports:
+  #     - 3000:80
+  #   deploy:
+  #     replicas: 5
+  #     update_config:
+  #       parallelism: 2
+  #       delay: 5s
+
+  # visualizer:
+  #   image: dockersamples/visualizer:latest
+  #   ports:
+  #     - 5001:8080
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   stop_grace_period: 1m30s
 
   # site:
   #   image: site_image
